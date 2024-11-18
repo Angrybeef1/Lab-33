@@ -1,17 +1,37 @@
-//COMSC 210 | LAb 32 | Robert Stonemetz
+//COMSC 210 | LAb 33 | Robert Stonemetz
 
 #include "Car.h"
 #include <deque>
 #include <iostream>
+#include <array>
 
 using namespace std;
 
-const int INITIAL_QUEUE_SIZE = 2;
+//constant variables
+const int INITIAL_MIN_CARS = 1;
+const int INITIAL_MAX_CARS = 3;
 const double PAY_PROBABILITY = 0.55;
+const int NUM_LANES = 4;
 
-void printQueue(const deque<Car>& queue){
-    cout << "Que:\n";
-    if (queue.empty()){
+// prints the current state of the lanes
+
+void printQueue(const array<deque<Car>, NUM_LANES>& lanes){
+    cout << "Lanes Status:\n";
+
+    for(int i = 0; i<NUM_LANES; i++){
+        cout << "Lane : << i + 1 << :\n";
+        if (lanes[i].empty()){
+            cout << " empty\n";
+        }else{
+            for (const Car& car : lanes[i]) {
+                cout << "     ";
+                Car tempCar = car;
+                tempCar.print();
+            }
+        }
+    }
+}
+    /*if (queue.empty()){
         cout << "\n";
         return;
     }
@@ -21,10 +41,26 @@ void printQueue(const deque<Car>& queue){
         Car tempCar = car;
         tempCar.print();
     }
-}
+}*/
 
 int main () {
+
+    //initializes randomness 
     srand(time(0));
+
+    //create the array of 4 deque
+
+    array<deque<Car>, NUM_LANES>tollLanes;
+    //prepopulate lanes with cars
+    cout << "Initial queue: \n";
+    for (int lane = 0; lane < NUM_LANES; lane++) {
+        // Randomly determine initial number of cars for this lane
+        int initialCars = rand() % (INITIAL_MAX_CARS - INITIAL_MIN_CARS + 1) + INITIAL_MIN_CARS;
+        // Add the determined number of cars to the lane
+        for (int i = 0; i < initialCars; i++) {
+            tollLanes[lane].push_back(Car());
+        }
+    }
 
     deque<Car> tollQueue;
     for (int i = 0; i < INITIAL_QUEUE_SIZE; i++){
