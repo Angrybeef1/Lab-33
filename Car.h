@@ -28,13 +28,13 @@ class Car {
             year = rand() % (YEAR_MAX - YEAR_MIN + 1) + YEAR_MIN;
             transponder = rand() % (XP_MAX - XP_MIN + 1) + XP_MIN;
         }
-        string getMake() { return make; }
-        int getYear() { return year; }
-        int getTransponder() { return transponder; }
-        void setMake(string mk) { make = mk; }
-        void setYear(int yr) { year = yr; }
-        void setTransponder(int t) { transponder = t; }
-        void print() {
+        string getMake() const { return make; }
+        int getYear() const { return year; }
+        int getTransponder() const { return transponder; }
+        //void setMake(string mk) { make = mk; }
+        //void setYear(int yr) { year = yr; }
+        //void setTransponder(int t) { transponder = t; }
+        void print() const {
             cout << "[" << year << " " << make << " (" << transponder << ")]\n";
         }
 };
