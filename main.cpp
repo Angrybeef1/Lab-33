@@ -13,7 +13,7 @@ using namespace std;
 const int INITIAL_MIN_CARS = 1;
 const int INITIAL_MAX_CARS = 3;
 const int NUM_LANES = 4;
-const int SIMULATION_PERIODS = 10;
+const int SIMULATION_PERIODS = 20;
 
 //constant variablse split to separate probability
 const double PROB_PAY = 0.46;      
@@ -135,7 +135,7 @@ int main () {
         }
 
         
-        //prints current state
+        //prints state after each iteration
         printQueue(tollLanes);
     }
 
