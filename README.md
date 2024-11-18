@@ -1,72 +1,146 @@
 Objective
-Write a program that will simulate a line of cars lined up to pay their toll at a toll booth. We will start with a certain number of cars in the line, and repeatedly perform these line operations until the line is empty:
+We will add functionality to Lab 32's code set:
 
-55% probability that the car at the head of the line pays its toll and leaves the toll booth
-45% probability that another car joins the line for the toll booth
+Add multiple lanes into the management system to simulate an entire plaza of toll booths
+Add the capability for a car at the rear of a lane to switch lanes
  
 
-Starter class
-Here is Car.h, a Car class with three private member variables (make, year, transponder).
+GitHub for this lab
+Use the same repo as Lab 32. Starting with your completed code from Lab 32, create a new GitHub branch for Lab 33.
 
-Car-1.hDownload Car-1.h
-
-The constructor will randomly generate a car for you. It selects a random element from the vehicle manufacturer list, generates a 4-digit random number as the transponder number (range: 1000-9999), and randomly generates the year (1999-2024). 
-
-The class has its standard setters and getters, as well as a basic print() function.
-
-Make sure this instruction is at the top of your main.cpp file to link to the Car.h file:
-
-#include "Car.h"
+Submit the same URL for this lab as Lab 32.
 
  
 
 Requirements
-Use an std::deque. This means our program structure will be a deque of Cars.
+These are the additional requirements for this lab. These assume you have completed Lab 32 and have a working tool booth simulation.
 
-Use a constant and initialize it to 2 to determine the initial size of the deque when the simulation starts (representing how many cars are already in line to pay the toll when the simulation starts).
+Add More Lanes
+There are now 4 toll booth lanes at play. Use an array to hold the lanes. The array will be of type deque<Car>. When the simulation starts, pre-populate the lanes with 1-3 cars like before.Each time period will now have operations happening on all lines.
 
-Use the Car class to create Car objects, which are placed in the std::deque representing the toll booth lane.
+ 
 
-Do not alter the Car class.
+Add Switching Lanes
+Any car at the end of any queue can switch lanes to a random lane that's not their original lane.
 
-Run the simulation until the queue is empty.
+ 
 
-After each time period, display the queue using the .print() method in the Car class.
+Probabilities
+The three possible operations and their probabilities are:
+
+46% probability that the car at the head of the queue pays its toll and leaves the queue
+39% probability that another car joins the queue
+15% probability that the rear car will shift lanes
+All these probability values need to be stored as constants defined in your program, never in hard-coding.
+
+If a lane is currently empty but there is still more time in the simulation, those probabilities will be just 50/50 if a new car enters the queue or not. Of course another car might shift lanes into it, but that's a different lane's business.
+
+ 
+
+Termination Criteria
+Run the simulation for 20 time periods.
 
  
 
 Sample Output
-This simulation ran 6 cycles until the queue was empty; your results will vary.
+See my notes in highlighter.
 
 Initial queue:
-    [2000 Volkswagen (2408)]
-    [2018 Skoda (8214)]
+Lane 1:
+    [2000 Skoda (7707)]
+    [2022 Hyundai (8832)]
+Lane 2:
+    [2022 Jaguar (4162)]
+    [2007 Jaguar (4798)]
+Lane 3:
+    [2023 Peugeot (5786)]
+    [2002 Nissan (6884)]
+Lane 4:
+    [2018 Mazda (2218)]
+    [2001 Volvo (5556)]
 
-Time: 1 Operation: Joined lane: [2005 Volvo (6662)]
-Queue:
-    [2000 Volkswagen (2408)]
-    [2018 Skoda (8214)]
-    [2005 Volvo (6662)]
+Time: 1
+Lane: 1 Paid: [2000 Skoda (7707)]   <-- first list what operations happened in all the lanes
+Lane: 2 Paid: [2022 Jaguar (4162)]
+Lane: 3 Paid: [2023 Peugeot (5786)]
+Lane: 4 Joined: [2008 Jaguar (4051)]
+Lane 1 Queue:                       <-- then print each lane's queue
+        [2022 Hyundai (8832)]
+Lane 2 Queue: 
+        [2007 Jaguar (4798)]
+Lane 3 Queue: 
+        [2002 Nissan (6884)]
+Lane 4 Queue: 
+        [2018 Mazda (2218)]
+        [2001 Volvo (5556)]
+        [2008 Jaguar (4051)]
 
-Time: 2 Operation: Car paid: [2000 Volkswagen (2408)]
-Queue:
-    [2018 Skoda (8214)]
-    [2005 Volvo (6662)]
+Time: 2
+Lane: 1 Joined: [1990 Ford (4997)]
+Lane: 2 Joined: [1996 Renault (9551)]
+Lane: 3 Joined: [2020 Toyota (8607)]
+Lane: 4 Joined: [2001 Peugeot (7976)]
+Lane 1 Queue: 
+        [2022 Hyundai (8832)]
+        [1990 Ford (4997)]
+Lane 2 Queue: 
+        [2007 Jaguar (4798)]
+        [1996 Renault (9551)]
+Lane 3 Queue: 
+        [2002 Nissan (6884)]
+        [2020 Toyota (8607)]
+Lane 4 Queue: 
+        [2018 Mazda (2218)]
+        [2001 Volvo (5556)]
+        [2008 Jaguar (4051)]
+        [2001 Peugeot (7976)]
 
-Time: 3 Operation: Joined lane: [2002 Lexus (6325)]
-Queue:
-    [2018 Skoda (8214)]
-    [2005 Volvo (6662)]
-    [2002 Lexus (6325)]
+Time: 3
+Lane: 1 Paid: [2022 Hyundai (8832)]
+Lane: 2 Paid: [2007 Jaguar (4798)]
+Lane: 3 Switched: [2020 Toyota (8607)]
+Lane: 4 Switched: [2001 Peugeot (7976)]
+Lane 1 Queue: 
+        [1990 Ford (4997)]
+        [2020 Toyota (8607)]   <-- was in lane 3 but switched
+Lane 2 Queue: 
+        [1996 Renault (9551)]
+        [2001 Peugeot (7976)]  <-- was in lane 4 but switched
+Lane 3 Queue: 
+        [2002 Nissan (6884)]
+Lane 4 Queue: 
+        [2018 Mazda (2218)]
+        [2001 Volvo (5556)]
+        [2008 Jaguar (4051)]
 
-Time: 4 Operation: Car paid: [2018 Skoda (8214)]
-Queue:
-    [2005 Volvo (6662)]
-    [2002 Lexus (6325)]
+Time: 4
+Lane: 1 Paid: [1990 Ford (4997)]
+Lane: 2 Switched: [2001 Peugeot (7976)]
+Lane: 3 Paid: [2002 Nissan (6884)]
+Lane: 4 Switched: [2008 Jaguar (4051)]
+Lane 1 Queue: 
+        [2020 Toyota (8607)]
+Lane 2 Queue: 
+        [1996 Renault (9551)]
+Lane 3 Queue: 
+        [2001 Peugeot (7976)]
+        [2008 Jaguar (4051)]
+Lane 4 Queue: 
+        [2018 Mazda (2218)]
+        [2001 Volvo (5556)]
 
-Time: 5 Operation: Car paid: [2005 Volvo (6662)]
-Queue:
-    [2002 Lexus (6325)]
-
-Time: 6 Operation: Car paid: [2002 Lexus (6325)]
-Queue:
+Time: 5
+Lane: 1 Paid: [2020 Toyota (8607)]
+Lane: 2 Joined: [1991 Nissan (3548)]
+Lane: 3 Paid: [2001 Peugeot (7976)]
+Lane: 4 Joined: [2011 Hyundai (3770)]
+Lane 1 Queue: empty    <-- show an empty queue
+Lane 2 Queue: 
+        [1996 Renault (9551)]
+        [1991 Nissan (3548)]
+Lane 3 Queue: 
+        [2008 Jaguar (4051)]
+Lane 4 Queue: 
+        [2018 Mazda (2218)]
+        [2001 Volvo (5556)]
+        [2011 Hyundai (3770)]
