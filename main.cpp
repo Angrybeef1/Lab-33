@@ -43,7 +43,7 @@ void printQueue(const array<deque<Car>, NUM_LANES>& lanes) {
 }
 
 //processes the time period for each lane
-void processLaneOperations(array<deque<Car>, NUM_LANES>& lanes, int currentLane, vector<string>& operations) {
+void processLaneOperations(array<deque<Car>, NUM_LANES>& lanes, int currentLane) {
     //handles empty lane
     if (lanes[currentLane].empty()) {
         double probability = (double)rand() / RAND_MAX;
@@ -105,17 +105,17 @@ int main () {
     srand(time(0));
 
     //create the array of 4 deque
-
     array<deque<Car>, NUM_LANES>tollLanes;
-    //prepopulate lanes with cars
+
+    //initiates lanes with random number of cars
     cout << "Initial queue: \n";
     for (int lane = 0; lane < NUM_LANES; lane++) {
         // Randomly determine initial number of cars for this lane
         int initialCars = rand() % (INITIAL_MAX_CARS - INITIAL_MIN_CARS + 1) + INITIAL_MIN_CARS;
-        // Add the determined number of cars to the lane
         for (int i = 0; i < initialCars; i++) {
             tollLanes[lane].push_back(Car());
         }
+        //prints initial state
         cout << "Lane " << lane + 1 << ":\n";
         for (const auto& car : tollLanes[lane]){
             cout << "    ";
@@ -125,118 +125,21 @@ int main () {
     }
     cout << endl;
 
+    // Main simulation loop
     for (int time = 1; time <= SIMULATION_PERIODS; time++){
         cout << "Time: " << time << endl;
 
-        //stores operations
-        vector<string> operations;
-
         //process each lane
         for(int lane = 0; lane < NUM_LANES; lane++){
-            processLaneOperations(tollLanes, lane, operations);
+            processLaneOperations(tollLanes, lane);
         }
 
-        //prints operations
-        for (const string& op : operations){
-            cout << op << endl;
-        }
-
+        
         //prints current state
         printQueue(tollLanes);
     }
 
-    /*// Display initial state of all lanes
-    cout << "Initial state:\n";
-    printLanes(tollLanes);
-    cout << endl;
-
-    int time = 1;
-    bool lanesActive = true;
-
-    //main similation
-    while (lanesActive) {
-        cout << "Time Period: " << time << "\n";
-        cout << "----------------\n";
-
-        // Process each lane in the current time period
-        for (int lane = 0; lane < NUM_LANES; lane++) {
-            if (!tollLanes[lane].empty()) {
-                // Generate random probability for current operation
-                double probability = (double)rand() / RAND_MAX;
-
-                if (probability < PAY_PROBABILITY) {
-                    // 55% chance: First car in lane pays and leaves
-                    cout << "Lane " << lane + 1 << " - Car paid: ";
-                    tollLanes[lane].front().print();
-                    tollLanes[lane].pop_front();
-                } else {
-                    // 45% chance: New car joins the lane
-                    Car newCar;
-                    cout << "Lane " << lane + 1 << " - Car joined: ";
-                    newCar.print();
-                    tollLanes[lane].push_back(newCar);
-                }
-            } else {
-                // If lane is empty, automatically add a new car
-                Car newCar;
-                cout << "Lane " << lane + 1 << " - Car joined empty lane: ";
-                newCar.print();
-                tollLanes[lane].push_back(newCar);
-            }
-        }
-
-        // Display state of all lanes after this time period's operations
-        cout << "\nAfter operations:\n";
-        printLanes(tollLanes);
-        cout << endl;
-
-
-        lanesActive = false;
-        for (const auto& lane : tollLanes) {
-            if (!lane.empty()) {
-                lanesActive = true;
-                break;
-            }
-        }
-
-        time++;
-    }
-
-    cout << "Simulation ended: All lanes empty\n";
-
-
-
-
-
-    /*deque<Car> tollQueue;
-    for (int i = 0; i < INITIAL_QUEUE_SIZE; i++){
-        tollQueue.push_back(Car());
-    }
-
-    cout << "Initial queue:\n";
-    printQueue(tollQueue);
-    cout << endl;
-
-    int time =1;
-
-    while(!tollQueue.empty()){
-        double probability = (double)rand() / RAND_MAX;
-
-        if (probability < PAY_PROBABILITY && !tollQueue.empty()) {
-            cout << "Time: " << time << " Operation: Car paid: ";
-            tollQueue.front().print();
-            tollQueue.pop_front();
-        } else {
-            Car newCar;
-            cout << "Time: " << time << " Operation: Joined lane: ";
-            newCar.print();
-            tollQueue.push_back(newCar);
-        }
-
-        printQueue(tollQueue);
-        cout << endl;
-        time++;
-    }*/
+    
 
     return 0;
 }
