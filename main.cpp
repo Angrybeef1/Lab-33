@@ -13,7 +13,7 @@ using namespace std;
 const int INITIAL_MIN_CARS = 1;
 const int INITIAL_MAX_CARS = 3;
 const int NUM_LANES = 4;
-const int SIMULATION_PERIODS = 20;
+const int SIMULATION_PERIODS = 10;
 
 //constant variablse split to separate probability
 const double PROB_PAY = 0.46;      
@@ -33,8 +33,6 @@ void printQueue(const array<deque<Car>, NUM_LANES>& lanes) {
 
             //prints cars for current lane
             for (const auto& car : lanes[i]) {
-                //cout << "\t[" << car.getYear() << " " << car.getMake() 
-                     //<< " (" << car.getTransponder() << ")]" << endl;
                 cout << "\t";
                 car.print();
                 cout << endl;
@@ -44,38 +42,42 @@ void printQueue(const array<deque<Car>, NUM_LANES>& lanes) {
     cout << endl;
 }
 
+//processes the time period for each lane
 void processLaneOperations(array<deque<Car>, NUM_LANES>& lanes, int currentLane, vector<string>& operations) {
+    //handles empty lane
     if (lanes[currentLane].empty()) {
         double probability = (double)rand() / RAND_MAX;
         if (probability < PROB_NEW_CAR_EMPTY_LANE) {
             Car newCar;
-            string op = "Lane: " + to_string(currentLane + 1) + " Joined: " + 
-                       "[" + to_string(newCar.getYear()) + " " + newCar.getMake() + 
-                       " (" + to_string(newCar.getTransponder()) + ")]";
-            operations.push_back(op);
+            cout << "Lane " << currentLane + 1 << " Joined: ";
+            newCar.print();
+            cout << endl;
             lanes[currentLane].push_back(newCar);
         }
         return;
     }
 
+    //generates random number for operation
     double probability = (double)rand() / RAND_MAX;
-    string op = "Lane: " + to_string(currentLane + 1) + " ";
-
+    
+    //determnines probability of car paying 
     if (probability < PROB_PAY) {
-        // Car pays and leaves
-        op += "Paid: [" + to_string(lanes[currentLane].front().getYear()) + " " +
-            lanes[currentLane].front().getMake() + " (" + 
-            to_string(lanes[currentLane].front().getTransponder()) + ")]";
+        cout << "Lane " << currentLane + 1 << " Paid: ";
+        lanes[currentLane].front().print();
+        cout << endl;
         lanes[currentLane].pop_front();
+    //if new car joins
     } else if (probability < PROB_PAY + PROB_JOIN) {
-        // New car joins
         Car newCar;
-        op += "Joined: [" + to_string(newCar.getYear()) + " " + 
-            newCar.getMake() + " (" + to_string(newCar.getTransponder()) + ")]";
+        cout << "Lane " << currentLane + 1 << " Joined: ";
+        newCar.print();
+        cout << endl;
         lanes[currentLane].push_back(newCar);
+    // Last car switches lanes 
     } else if (probability < PROB_PAY + PROB_JOIN + PROB_SWITCH && !lanes[currentLane].empty()) {
         // Last car switches lanes
         vector<int> possibleLanes;
+        //finds which lane the car switches too
         for (int i = 0; i < NUM_LANES; i++) {
             if (i != currentLane) {
                 possibleLanes.push_back(i);
@@ -85,29 +87,18 @@ void processLaneOperations(array<deque<Car>, NUM_LANES>& lanes, int currentLane,
         if (!possibleLanes.empty()) {
             int destinationLane = possibleLanes[rand() % possibleLanes.size()];
             Car switchingCar = lanes[currentLane].back();
-            op += "Switched: [" + to_string(switchingCar.getYear()) + " " +
-                switchingCar.getMake() + " (" + to_string(switchingCar.getTransponder()) + ")]";
+            cout << "Lane " << currentLane + 1 << " Switched: ";
+            switchingCar.print();
+            cout << endl;
+            // Remove from current lane and add to destination lane
             lanes[currentLane].pop_back();
             lanes[destinationLane].push_back(switchingCar);
         }
     }
-    
-    operations.push_back(op);
 }
 
 
-    /*if (queue.empty()){
-        cout << "\n";
-        return;
-    }
-
-    for (const Car& car : queue) {
-        cout << "     ";
-        Car tempCar = car;
-        tempCar.print();
-    }
-}*/
-
+    
 int main () {
 
     //initializes randomness 
